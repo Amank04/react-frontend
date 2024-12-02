@@ -16,6 +16,7 @@ const App = () => {
   // Load todos from localStorage when the component mounts
   useEffect(() => {
     const savedTodos = localStorage.getItem("todos");
+
     if (savedTodos) {
       setTodos(JSON.parse(savedTodos)); // Parse the saved todos and set state
     }
@@ -23,6 +24,7 @@ const App = () => {
 
   // Save todos to localStorage whenever the todos state changes
   useEffect(() => {
+    console.log("todos2: ", todos)
     if (todos.length > 0) {
       localStorage.setItem("todos", JSON.stringify(todos));
       console.log("Tasks saved to localStorage:", todos); // Debugging output
@@ -41,12 +43,14 @@ const App = () => {
 
   // Add Todo
   const addTodo = (newTodo) => {
+    console.log("add todo: ", newTodo)
     if (newTodo.name.trim()) {
       const newTodos = [
         ...todos,
         {
           id: Date.now(), // Use current timestamp for unique IDs
           name: newTodo.name.trim(),
+          priority: newTodo.priority,
           time: newTodo.time,
           labor: newTodo.labor,
           deadline: newTodo.deadline,

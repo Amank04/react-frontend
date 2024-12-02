@@ -44,6 +44,7 @@ const TaskModal = ({ onClose, onSave, existingTasks = [] }) => {
       alert("Please fill out all required fields.");
       return;
     }
+    console.log("task: ", task)
     onSave(task); // Pass the entire task object
     setTask({
       name: "",
