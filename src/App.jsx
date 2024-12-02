@@ -47,7 +47,6 @@ const App = () => {
         {
           id: Date.now(), // Use current timestamp for unique IDs
           name: newTodo.name.trim(),
-          priority: newTodo.priority,
           time: newTodo.time,
           labor: newTodo.labor,
           deadline: newTodo.deadline,
@@ -58,16 +57,6 @@ const App = () => {
       ];
       setTodos(newTodos); // Update state
     }
-  };
-  
-
-  // Toggle Todo Complete
-  const toggleComplete = (id) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos); // Update state
-    localStorage.setItem("todos", JSON.stringify(updatedTodos)); // Update local storage
   };
 
   // Delete Todo
@@ -115,12 +104,12 @@ const App = () => {
       <div
         ref={getStartedSectionRef} // Assign the ref to the section
         id="get-started-section"
-        className="bg-[radial-gradient(circle_588px_at_31.7%_40.2%,_rgba(225,200,239,1)_21.4%,_rgba(163,225,233,1)_57.1%)] h-auto w-full flex flex-col items-center p-6 py-36"
+        className="bg-[radial-gradient(circle_588px_at_31.7%_40.2%,_rgba(225,200,239,1)_21.4%,_rgba(163,225,233,1)_57.1%)] h-auto w-full flex flex-col items-center p-6 py-10 md:py-20 lg:py-36"
       >
-        <h1 className="text-5xl font-bold mb-10 text-teal-600 ">Task List</h1>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 lg:mb-10 text-teal-600">Task List</h1>
 
-        <div className="flex items-center mb-4 gap-5">
-          <div className="relative w-80">
+        <div className="flex flex-col sm:flex-row items-center mb-4 gap-4 sm:gap-5 w-full sm:w-auto">
+          <div className="relative w-full sm:w-80">
             <input
               type="text"
               placeholder="Search Todos"
@@ -139,7 +128,7 @@ const App = () => {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+            className="bg-green-600 text-white px-4 py-2 mt-4 sm:mt-0 sm:ml-4 rounded-md hover:bg-green-700"
           >
             Add Todos
           </button>
@@ -156,33 +145,16 @@ const App = () => {
               <TodoItem
                 key={todo.id}
                 todo={todo}
-                toggleComplete={toggleComplete}
                 deleteTodo={deleteTodo}
                 editTodo={editTodo}
               />
             ))}
 
           {todos.filter((todo) => todo.completed).length > 0 && (
-            <h2 className="text-xl font-semibold text-green-700 mt-6 mb-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-green-700 mt-6 mb-2">
               Completed Tasks {todos.filter((todo) => todo.completed).length}
             </h2>
           )}
-
-          {todos
-            .filter(
-              (todo) =>
-                todo.completed &&
-                todo.title.toLowerCase().includes(searchQuery.toLowerCase()) // Filter based on search query
-            )
-            .map((todo) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                toggleComplete={toggleComplete}
-                deleteTodo={deleteTodo}
-                editTodo={editTodo}
-              />
-            ))}
         </div>
 
         <button
@@ -191,13 +163,6 @@ const App = () => {
         >
           Get your Smart Task Schedule for Today
         </button>
-
-        {/* <button
-          onClick={saveTodos}
-          className="bg-blue-600 text-white px-4 py-2 mt-6 rounded-md hover:bg-blue-700"
-        >
-          Save Todos as JSON
-        </button> */}
 
         {/* Render Modal */}
         {isModalOpen && (
@@ -223,68 +188,42 @@ const App = () => {
   );
 };
 
-const TodoItem = ({ todo, toggleComplete, deleteTodo, editTodo }) => {
+const TodoItem = ({ todo, deleteTodo, editTodo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(todo.name);
 
   return (
-    <div className="flex items-center justify-between bg-white rounded-md shadow-md p-4 mb-2">
+    <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-md shadow-md p-4 mb-4 sm:mb-2 w-full">
       {isEditing ? (
         <input
           type="text"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
-          className="border px-2 py-1 flex-grow rounded-md"
+          className="px-4 py-2 border rounded-md w-full sm:w-80"
         />
       ) : (
-        <span className={`flex-grow ${todo.completed ? "line-through text-gray-400" : ""}`}>
-          {todo.name} {/* Ensure task name is displayed */}
-        </span>
+        <h3 className="text-lg font-medium text-gray-800 truncate">{todo.name}</h3>
       )}
-
-      <div className="flex space-x-3">
-        {isEditing ? (
-          <>
-            <button
-              onClick={() => {
-                editTodo(todo.id, { name: newName });
-                setIsEditing(false);
-              }}
-              className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700"
-            >
-              Save
-            </button>
-            <button
-              onClick={() => setIsEditing(false)}
-              className="bg-gray-600 text-white px-2 py-1 rounded-md hover:bg-gray-700"
-            >
-              Cancel
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => toggleComplete(todo.id)}
-              className={`${
-                todo.completed ? "bg-green-500" : "bg-gray-300"
-              } text-white px-2 py-1 rounded-md hover:bg-green-600`}
-            >
-              {todo.completed ? "Completed" : "Mark as Complete"}
-            </button>
-            <button
-              onClick={() => deleteTodo(todo.id)}
-              className="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-700"
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700"
-            >
-              Edit
-            </button>
-          </>
-        )}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => {
+            if (isEditing) {
+              editTodo(todo.id, { name: newName });
+              setIsEditing(false);
+            } else {
+              setIsEditing(true);
+            }
+          }}
+          className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+        >
+          {isEditing ? "Save" : "Edit"}
+        </button>
+        <button
+          onClick={() => deleteTodo(todo.id)}
+          className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

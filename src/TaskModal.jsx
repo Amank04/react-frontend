@@ -59,7 +59,7 @@ const TaskModal = ({ onClose, onSave, existingTasks = [] }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg mx-4 sm:mx-8 md:mx-auto lg:max-w-2xl">
         <h2 className="text-2xl font-bold mb-4">Add New Task</h2>
         {/* Task Name */}
         <input
@@ -68,7 +68,7 @@ const TaskModal = ({ onClose, onSave, existingTasks = [] }) => {
           placeholder="Task name (required)"
           value={task.name}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md mb-4"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {/* Priority */}
         <input
@@ -79,7 +79,7 @@ const TaskModal = ({ onClose, onSave, existingTasks = [] }) => {
           max="10"
           value={task.priority}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md mb-4"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {/* Estimated Time */}
         <input
@@ -90,7 +90,7 @@ const TaskModal = ({ onClose, onSave, existingTasks = [] }) => {
           step="0.5"
           value={task.time}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md mb-4"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {/* Labor Requirement */}
         <input
@@ -100,31 +100,33 @@ const TaskModal = ({ onClose, onSave, existingTasks = [] }) => {
           min="1"
           value={task.labor}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md mb-4"
+          className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        
+
         {/* Partial Work */}
-        <input
-          type="checkbox"
-          name="partial_allowed"
-          checked={task.partial_allowed}
-          onChange={(e) =>
-            setTask((prev) => ({
-              ...prev,
-              partial_allowed: e.target.checked, // Store boolean directly
-            }))
-          }
-        />
-        <label htmlFor="partial_allowed">Partial work allowed</label>
+        <div className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            name="partial_allowed"
+            checked={task.partial_allowed}
+            onChange={(e) =>
+              setTask((prev) => ({
+                ...prev,
+                partial_allowed: e.target.checked, // Store boolean directly
+              }))
+            }
+            className="mr-2"
+          />
+          <label htmlFor="partial_allowed">Partial work allowed</label>
+        </div>
 
         {/* Dependencies */}
-        {/* In TaskModal.js */}
         <select
           name="dependencies"
           multiple
           value={task.dependencies}
           onChange={handleDependenciesChange}
-          className="w-full px-4 py-2 border rounded-md my-4"
+          className="w-full px-4 py-2 border rounded-md my-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {existingTasks.map((existingTask) => (
             <option key={existingTask} value={existingTask}>
